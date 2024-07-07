@@ -2,17 +2,19 @@ import pkg from "elliptic";
 const { ec: EC } = pkg;
 
 function parseDER(serialized) {
+  const toHex = (start, length) => serialized.substring(start, start + length);
+
   // Extract R
-  const rLength = parseInt(serialized.substring(6, 8), 16) * 2;
+  const rLength = parseInt(toHex(6, 2), 16) * 2;
   const rStart = 8;
   const rEnd = rStart + rLength;
-  const r = serialized.substring(rStart, rEnd);
+  const r = toHex(rStart, rLength);
 
   // Extract S
-  const sLength = parseInt(serialized.substring(rEnd + 2, rEnd + 4), 16) * 2;
+  const sLength = parseInt(toHex(rEnd + 2, 2), 16) * 2;
   const sStart = rEnd + 4;
   const sEnd = sStart + sLength;
-  const s = serialized.substring(sStart, sEnd);
+  const s = toHex(sStart, sLength);
 
   return { r, s };
 }
